@@ -31,7 +31,7 @@ func Auth(vs verysign.Sign) echo.MiddlewareFunc {
 			auth, err := // extract the jwt bearer token from Authorization header
 			// handle error
 
-			token, err := vs.VerifySignature(token)
+			token, err := vs.VerifySignature(auth)
             // handle error
 
             // token was signed by a valid key, check token validity

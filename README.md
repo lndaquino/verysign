@@ -56,4 +56,4 @@ func Auth(vs verysign.Sign) echo.MiddlewareFunc {
 
 ## Acknowledgment
 
-[jwt-go issues](https://github.com/dgrijalva/jwt-go/issues/438) for the useful discussion
+[jwt-go issues](https://github.com/dgrijalva/jwt-go/issues/438) for the useful inspirations

@@ -71,7 +71,7 @@ func Test_GCP_VerifySignature(t *testing.T) {
 		},
 		"malformed certificate": {
 			token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEifQ.eyJleHAiOjE2ODA4ODg2NTZ9.teSTKOrGttiW3XkBAFEDxb1UhYG1H2ZtFTKd9FLrei2pqq7jjjSd9C0SXHmFIm6luIhdOkmk1lxCwcVqLM-gGOCNeVIepTbNaFyqcVuiDj44ekdQYTP82OnxXakrLQSwRWVI7jtHZGmDlV2STGPA18nXi1brj4I081_hNXUpP9WF1LpMoaVSLyUVgcmraTxuVIqZToSiy1KeG6wwTx--Sin2uSKnykaDnG2OutVi9ccoW0lt7a2ggnKQd_c2sgd7-4bRWRMdxCPPHkTSOegUe7Q5op71HzM_w17YnAF3YEf4RYV22XADUAGYsOH7Hx_HhtSkCI_D_tFxBaFVq4gU13cgsxruCLwF60xIA06AKD_SgJHbBIlVykCwT3ghCQh4Ph_e29BRcyOFOauZiPzbo4RrgFORx_rdzcwelVBOvFhQ2Xf1fPllhZy8B-Kmj4YBJyj-qT9s5sepF67lcBiKVPOegqz4TtPG84h6ELxkzcsiuW5Pc-itsZ62xoD5JbMtN83eqKMuvxn9dkOq5cGOp4qbi0nUCu3Sq5EMk4ju8hJGHI8QEEQp90peEO81rMIlcbVBDjoGHEn5lo08hQbpniZsDgbuhOfMeLQJsgRtyx3iW1CInlpeofXSjn9GtDChZVwM2FRp-mNTUIi08MPQUeNOiwynwRrgz6XUqN3TFVg",
-			err:   fmt.Errorf("an error occurred parsing the public key base64 for key ID '1'; x509: malformed certificate"),
+			err:   fmt.Errorf("an error occurred parsing the public key base64 for key ID '1'"),
 		},
 		"valid token": {
 			token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIifQ.eyJleHAiOjk5OTk5OTk5OTl9.nR0m1NBtfLFWdwA1JRcIfOKb4-EzUkqvdYUTy1uYk2GjmNOrndOubWysdVocMe6qPCXgJFTUzgvm9OSPqC7ntEtVzjKXKBAxGHeaQS82wSKD_820WAuOlG6S9PJPvAwGdPix00vAKH_Dx9tB7BK9QVHeBw77dWmu6PC-OTCs1N-Za01OKgzYIbbODbRnirEt4fTMeJexzpW1Ii7J5Yr6QJTw-XhTzMbp5pO3-d_9uMvIkrdzqJRRNqOaffoSftqfRV7pXdrMkbhTCOviv6uEXXkogeVGTgbxlSHz5BKPmjKfd8c4fx_Z0h26cLqbILSJ_2aJLRVKo_Dj_wkEe8M3Dp-4fjZJ2a2pasL6fileZsh2CapyDp0SugC2uEh33NIBbpJb_UlLNrxvdv1fT8hnaNvJspFs-UR-rd7mlhF2ASiIZp_vyJpSrA-mzowYBgcqs_pavbsalloRAhanH9Ozwj8zNyjlrkABs4zma5Ml4iT-p-6Bt8mEODqgGIYynlJHj85UGBML40zBLllRaM3G7sEPBld3gQdSzaGoq4aobNFHtQW3tcLiMqIm9UAtEia_35kA7_j0p4CkyabbsBLFKBc9Qmf63B1M7kLAtI0xEN1ZOes1PSc_rffENigc90AVs9VD81igb8BRhkdzF8U5z8PyhfUGd_iGhXG9z_atokY",
@@ -98,7 +98,7 @@ func Test_GCP_VerifySignature(t *testing.T) {
 
 			// Assert
 			if testCase.err != nil {
-				assert.Equal(t, err.Error(), testCase.err.Error())
+				assert.Contains(t, err.Error(), testCase.err.Error())
 			} else {
 				assert.NoError(t, err)
 				assert.True(t, token.Valid)

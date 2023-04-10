@@ -12,6 +12,8 @@ List of supported vendors:
 
 * GCP
 
+Supported Go version: starting on 1.16
+
 ## Example using echo
 
 ```

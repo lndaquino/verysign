@@ -61,7 +61,7 @@ func Test_GCP_VerifySignature(t *testing.T) {
 			token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6NX0.eyJleHAiOjE2ODA4ODg2NTZ9.izGn7-HbNkitltRV896N3gqy6Pwb9fGIp2Yzwby37a8mVlCUaL9f5_0kHAt7UbaaoPu6YQ7U1w-tPr_Cu8gP_KYOTFuc3_vTUHNnXlsFFL9B6SOSlrE9QYumsvP1velk3zz1h_041PVz42dwnxvS04lS5Oo_ttQXmSr48wX4iEBRJwS_Zr_hLsrUFmRN_EwxlpqNI8Iy_Bv5SpWDF7Aa2NP6-xIK_B7e0W1Pb8nZSpaJgcwHQDNoX410jAW3io2eePL410RradlX1B5HYTrbQAP7aNmdW3TT1VW6AzMf_XscGNSkj4NOsVuMTiQ2RUjhfZuYuYoPWyUjbRVlpr-OJKHy-xse9mHDifotqY6YB7EbRuFKQl2DZWYebA8-8b_pUx3ZJCcOm9rYQLqSWutJj4nuH53lMBKLkTfJawfu5Q9kZowXdzarlj9Olng9HNo2nfwvsiqf5fP8nohv8cHKwV8aDpsWWBic9UOYJQD49B2jJyeizuwnWjyZDAW6-1OfXUSe3CyZbg28OsoQIvV6-3eiNNkK3eIy6FSzQUCg63f0JGvCfkDaRYSvAeXyagm41eGFm6XU31qNyR5NkhvAWlXwdlwKfY06Q45oMtYrB-mRQLe55PgSoAJm-iKdkoe7vFXuZRsdFCdtDms2QTW3glnVBXdlYhBY8rHCBw5V598",
 			err:   fmt.Errorf("found key ID, but value was not a string"),
 		},
-		"key not found": {
+		"key not found and refresh without the asked key": {
 			token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjYifQ.eyJleHAiOjE2ODA4ODg2NTZ9.kNQwyp4Cx3StyR30wzetapLpmK9MrAj_3ZCWJGkYRSt2rl_-ylCb4PiYmjSa6FXW_55hyYFcq_SVt5SYYLkbOVFCxATCzyz1KQqk0huy5Vx2Rbwhkg8hgan5Mf6kjq1fVquan5rwKbcUkharQw435DRhha2B867ht2c35wFryQmUPzqRFnJ810ArM9Os2pyRk7RryBA816GhNMRyTsqKNLsvpRV9gbpN4QdZGCCjwUMmZrRgs62uEroRqtgjZe5WWLy3nM0oWKjsJIinLf4j595OLB1vo4_N8Iyos07yD2W0PPJ9ro73cXOih41lSBV5DnxQ-sGWq-0PBWVrOcX7zmcAByFCCFNf4Gwkxqv5yLlQLGV9udqezFiskosWGlX8wgp4SpAwxcHZaT0-1zZQPyrqvC_TqtvkBbCeQkQM9Fz0t9tOzEEC_nFSytejpBi--Kv7A4QW4VoESaC--i4qF2sccn-NLQlry19nTKF7Z-i1aq_VlLZbwJD6i2rV0XcpdaJuM2VoSyAspBlXnhU7hb6hfX5YMEMPVz7X3cDhD-FS6fvo15OsjCk43vSUu2Qadq48ZRgHQGCExGzVPlmsvFXowbQwAMXS5dm17y0mBqsfb2t4i39MakpLY1pKsmc46Atq3RgdFVOjomxJ_sbQ5zrEXfnaxPylufhJHIAcvZ4",
 			err:   fmt.Errorf("no public RSA key found corresponding to key ID from token '6'"),
 		},
@@ -105,4 +105,36 @@ func Test_GCP_VerifySignature(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_GCP_VerifySignature_refreshSignatureWithNewKey(t *testing.T) {
+	testToken := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjYifQ.eyJleHAiOjk5OTk5OTk5OTl9.RAj03KuD655PZn1Grs8HnRFG8cOyOIejQ8QwN5Xz3R9UAoZiGC_s4O8qz9bcze89GFKDcxr0LVz_fE_WG2_J8D_jQ-CDOPF-_ai_fT59T1WcnS-pZh1NwJkdwr631wKvPC_PPLfV9N_m2xtd2e3On9cCFwd6Ey0AdUeWkbqRpCKGNzzRB43VPvrUTJHiG99wK-3NXhOoCk1aTxZZhewxXhfxkkYu8LBL5-DIITycjTcMSrdPNl3J1y4CyBRfX_GuN8NAYc7VyUJfjsS4DG4Sl2u9HJhEqKU5aKVD_3lWhxY6y7Mwg7JvTOM5_W-Srxwg0ekyPpLCD-Zlmt20J7YinLsJm7E-K4i__UqmnKjNfCVVyJd_U8pDMwYKyj8HgGt4okbqcK4pfdv1ByDbH296duOZCeSTHuatjCZPSVJm8d9uo99j2QNGv_xVfsx9XMxd4gavntCojN26jDzh2_yXPD4xMll5I34lUE1t0FmtQ_vt3W27yU0Hms9E-awad4uhHopKYCn3OKydaeKB5CcV-2kcuY6dXdDmdb4c_GMgYYYgwqLo379zBq1l7694j4_GXnaF4nsmsGXqB4xcO5sxQQMDHHpu9g3L6Hytou-lDSHPkFwwibrKbYxp9gBpk9yN85e4W_NCU1C9GBJ4K01_6OTCAeJoKaBtUfUUdSwKMyE"
+
+	resp := make(map[string]string)
+	resp["1"] = "-----BEGIN CERTIFICATE-----\nAAAAB3NzaC1yc2EAAAADAQABAAACAQDTJ0aK38iQSt47eedDfpbjgFhEKuVawErJbvx33KLi89lCcsH96qZPsB13sIoqkq4987mLGLU0gdj9wLSOdZ6dkkM/OA9PgIWGsSrM7lW5hhVr6EEGHNHGR9HYJ2c8UglcjYxAKPUx/zmzXJgVHVmL35V3moQLH46wgEDGyuW6aS1ZApaCpItn8DayKHTkga2WvbS6HmitcdVtGttp+hBKUjOwB6eE865fupELMSeM6NE4CXrgDyfX3DLfVg9j1P0VE3HO8+++CHxsuAae8NAd+wwdViB3QoXcun3EnHbXTab1d4wKXUTNU2eO0RR/BN2GpQaw9XhpEN3wzzCiRb+vxH2WpJqxuksSqzx5gKawYBqFaE/kFClWQ0duNfm4hJ1xDVxjr8ieAX6RyBfqjblShvO5OtT17UYoUIL+ikmo7gXzAPhlPBFBpVX75Oe3ELXiABEW+NlRd1eW/+ZXvfZTvu1VYEqodUvSTFv9x8iMxo9YrQqTJw72WtTlrZALdg/Uoo855OmJvlSZ7LwNMPXsxHMkdxOAvt+HycPW+u2Lq0cGZOsCo7bZKuehWWUj2hB/a3kvrvskfA6rsaGXV+KBRYZcW7Ef22fBTiISooSHX/sk6FoP4kp3iITKezBmdJKp157WIs8Xxhm6S6LgTFdkpcs7f3u7oN/trwblkI/I3Q==\n-----END CERTIFICATE-----\n"
+	resp["2"] = "-----BEGIN CERTIFICATE-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA0ydGit/IkEreO3nnQ36W44BYRCrlWsBKyW78d9yi4vPZQnLB/eqmT7Add7CKKpKuPfO5ixi1NIHY/cC0jnWenZJDPzgPT4CFhrEqzO5VuYYVa+hBBhzRxkfR2CdnPFIJXI2MQCj1Mf85s1yYFR1Zi9+Vd5qECx+OsIBAxsrlumktWQKWgqSLZ/A2sih05IGtlr20uh5orXHVbRrbafoQSlIzsAenhPOuX7qRCzEnjOjROAl64A8n19wy31YPY9T9FRNxzvPvvgh8bLgGnvDQHfsMHVYgd0KF3Lp9xJx2102m9XeMCl1EzVNnjtEUfwTdhqUGsPV4aRDd8M8wokW/r8R9lqSasbpLEqs8eYCmsGAahWhP5BQpVkNHbjX5uISdcQ1cY6/IngF+kcgX6o25UobzuTrU9e1GKFCC/opJqO4F8wD4ZTwRQaVV++TntxC14gARFvjZUXdXlv/mV732U77tVWBKqHVL0kxb/cfIjMaPWK0KkycO9lrU5a2QC3YP1KKPOeTpib5Umey8DTD17MRzJHcTgL7fh8nD1vrti6tHBmTrAqO22SrnoVllI9oQf2t5L677JHwOq7Ghl1figUWGXFuxH9tnwU4iEqKEh1/7JOhaD+JKd4iEynswZnSSqdee1iLPF8YZukui4ExXZKXLO397u6Df7a8G5ZCPyN0CAwEAAQ==\n-----END CERTIFICATE-----\n"
+	resp["3"] = "-----BEGIN CERTIFICATE-----\nCERT3\n-----END CERTIFICATE-----\n"
+	resp["4"] = "-----BEGIN CERTIFICATE-----\nCERT4\n-----END CERTIFICATE-----\n"
+	resp["5"] = "-----BEGIN CERTIFICATE-----\nCERT5\n-----END CERTIFICATE-----\n"
+	gock.New("https://www.googleapis.com").
+		MatchHeader("Accept", "application/json").
+		Get("/oauth2/v1/certs").
+		Reply(200).
+		JSON(resp)
+
+	vs, err := initGCP()
+	assert.NoError(t, err)
+	gock.Off()
+
+	resp["6"] = "-----BEGIN CERTIFICATE-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA0ydGit/IkEreO3nnQ36W44BYRCrlWsBKyW78d9yi4vPZQnLB/eqmT7Add7CKKpKuPfO5ixi1NIHY/cC0jnWenZJDPzgPT4CFhrEqzO5VuYYVa+hBBhzRxkfR2CdnPFIJXI2MQCj1Mf85s1yYFR1Zi9+Vd5qECx+OsIBAxsrlumktWQKWgqSLZ/A2sih05IGtlr20uh5orXHVbRrbafoQSlIzsAenhPOuX7qRCzEnjOjROAl64A8n19wy31YPY9T9FRNxzvPvvgh8bLgGnvDQHfsMHVYgd0KF3Lp9xJx2102m9XeMCl1EzVNnjtEUfwTdhqUGsPV4aRDd8M8wokW/r8R9lqSasbpLEqs8eYCmsGAahWhP5BQpVkNHbjX5uISdcQ1cY6/IngF+kcgX6o25UobzuTrU9e1GKFCC/opJqO4F8wD4ZTwRQaVV++TntxC14gARFvjZUXdXlv/mV732U77tVWBKqHVL0kxb/cfIjMaPWK0KkycO9lrU5a2QC3YP1KKPOeTpib5Umey8DTD17MRzJHcTgL7fh8nD1vrti6tHBmTrAqO22SrnoVllI9oQf2t5L677JHwOq7Ghl1figUWGXFuxH9tnwU4iEqKEh1/7JOhaD+JKd4iEynswZnSSqdee1iLPF8YZukui4ExXZKXLO397u6Df7a8G5ZCPyN0CAwEAAQ==\n-----END CERTIFICATE-----\n"
+	gock.New("https://www.googleapis.com").
+		MatchHeader("Accept", "application/json").
+		Get("/oauth2/v1/certs").
+		Reply(200).
+		JSON(resp)
+	defer gock.Off()
+
+	token, err := vs.VerifySignature(testToken)
+	assert.NoError(t, err)
+	assert.True(t, token.Valid)
 }

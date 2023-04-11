@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"sync"
 
 	jwt "gopkg.in/dgrijalva/jwt-go.v3"
 )
@@ -16,31 +17,27 @@ const (
 
 type gsignv1 struct {
 	certs map[string]string
+	sync.Mutex
 }
 
 func initGCP() (*gsignv1, error) {
-	var err error
-	request, _ := http.NewRequest(http.MethodGet, gcpV1Url, nil)
-	request.Header.Add("Accept", "application/json")
-	client := &http.Client{}
-
-	response, err := client.Do(request)
-	if err != nil || response.StatusCode != 200 {
-		return nil, err
-	}
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, err
-	}
-
+	var (
+		err  error
+		body []byte
+	)
 	gs := &gsignv1{}
+
+	if body, err = gs.getKeys(); err != nil {
+		return nil, err
+	}
+
+	gs.Lock()
+	defer gs.Unlock()
 	err = json.Unmarshal(body, &gs.certs)
 	return gs, err
 }
 
-func (g gsignv1) VerifySignature(tokenString string) (*jwt.Token, error) {
+func (g *gsignv1) VerifySignature(tokenString string) (*jwt.Token, error) {
 	verifySign := func(token *jwt.Token) (interface{}, error) {
 		var err error
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
@@ -57,7 +54,7 @@ func (g gsignv1) VerifySignature(tokenString string) (*jwt.Token, error) {
 			return nil, fmt.Errorf("found key ID, but value was not a string")
 		}
 
-		key, found := g.certs[keyId]
+		key, found := g.getKey(keyId)
 		if !found {
 			return nil, fmt.Errorf("no public RSA key found corresponding to key ID from token '%v'", keyId)
 		}
@@ -71,4 +68,43 @@ func (g gsignv1) VerifySignature(tokenString string) (*jwt.Token, error) {
 	}
 
 	return jwt.Parse(tokenString, verifySign)
+}
+
+func (g *gsignv1) getKey(keyID string) (string, bool) {
+	g.Lock()
+	key, ok := g.certs[keyID]
+	g.Unlock()
+	if ok {
+		return key, ok
+	}
+	g.refreshKeys()
+
+	g.Lock()
+	defer g.Unlock()
+	key, ok = g.certs[keyID]
+	return key, ok
+}
+
+func (g *gsignv1) refreshKeys() {
+	body, _ := g.getKeys()
+	g.Lock()
+	defer g.Unlock()
+	_ = json.Unmarshal(body, &g.certs)
+}
+
+func (g *gsignv1) getKeys() (body []byte, err error) {
+	var response *http.Response
+	request, _ := http.NewRequest(http.MethodGet, gcpV1Url, nil)
+	request.Header.Add("Accept", "application/json")
+	client := &http.Client{}
+
+	if response, err = client.Do(request); err != nil || response.StatusCode != 200 {
+		return
+	}
+	defer response.Body.Close()
+
+	if body, err = io.ReadAll(response.Body); err != nil {
+		return
+	}
+	return
 }

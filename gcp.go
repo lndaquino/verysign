@@ -37,6 +37,26 @@ func initGCP() (*gsignv1, error) {
 	return gs, err
 }
 
+// VerifySignature verifies the signature of a JWT token using the public RS256 key of the vendor specified in the Verifier struct.
+//
+// Parameters:
+//   - tokenString: the JWT token to be verified.
+//
+// Returns:
+//   - a *jwt.Token representing the parsed token if the signature is valid.
+//   - an error if the signature could not be verified or the token is invalid.
+//
+// Example:
+//   tokenString := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+//   verifier, err := verysign.Init(verysign.GCP)
+//   if err != nil {
+//     // handle error
+//   }
+//   parsedToken, err := verifier.VerifySignature(tokenString)
+//   if err != nil {
+//     // handle error
+//   }
+//   use parsedToken.Valid and parsedToken.Claims to access the token's validity and claims
 func (g *gsignv1) VerifySignature(tokenString string) (*jwt.Token, error) {
 	verifySign := func(token *jwt.Token) (interface{}, error) {
 		var err error

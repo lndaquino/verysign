@@ -30,14 +30,14 @@ import github.com/lndaquino/verysign
 func Auth(vs verysign.Sign) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			auth, err := // extract the jwt bearer token from Authorization header
+			tokenString, err := // extract the jwt bearer token from Authorization header
 			// handle error
 
-			token, err := vs.VerifySignature(auth)
+			parsedToken, err := vs.VerifySignature(tokenString)
             // handle error
 
             // token was signed by a valid key, check token validity
-            if token.Valid // ok, token is valid
+            if parsedToken.Valid // ok, token is valid
 
             // check claims
         }

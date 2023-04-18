@@ -5,7 +5,7 @@ package verysign
 import (
 	"fmt"
 
-	jwt "gopkg.in/dgrijalva/jwt-go.v3"
+	jwt "github.com/golang-jwt/jwt/v5"
 )
 
 type Sign interface {

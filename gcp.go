@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"sync"
 
-	jwt "gopkg.in/dgrijalva/jwt-go.v3"
+	jwt "github.com/golang-jwt/jwt/v5"
 )
 
 const (

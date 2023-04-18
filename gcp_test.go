@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/h2non/gock"
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/dgrijalva/jwt-go.v3"
 )
 
 func Test_initGCP(t *testing.T) {
@@ -67,7 +67,7 @@ func Test_GCP_VerifySignature(t *testing.T) {
 		},
 		"not a pem encoded key": {
 			token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjUifQ.eyJleHAiOjE2ODA4ODg2NTZ9.Mzh7X1oxtRlG149FwUUIBjIe8Lufglo1MYWsTxvQNuRiABAFXklKwg6C_VnrvXEKnVe2eDmnZR8PDboBoDAVmxQarqTqpiQSHV-ap9f5WBCf7GuyOdJhacUiBq0CZRInMQv1tqNHBq9jCKFcOryFQfGUvmzPXef9km8eKMVPF6GRHxRr8WDWAJw5CzgM3czHcKP3gdqhQSu2ifsEtoVxfLGZqR04l5enpGL1O-cVruVL_qt3UsQF4TCNJs7Mg_1L33DQIKqmuHIU0s_kygSm2blyHbE_IR_Nna3HJggMhOqpzbGyVDXYVlyTZj4jBgafjUYRRHTPEiABAOFJ6sVMYFVVBUFPAD16s_l80-BUS5_GkdV51yWgsBpdiW08eN90Mo1G2V_deS5K2vN3qKakh_e6eKQ3IjX6A9uB_i71L2C_0LUs79vOarRNO9i6mdJknV6zBSKV-XfFpIrV4SQ6vE8q22j3uPGyIe2WoJeYmUWTkmTA7F2GLxrjpOWQBhHFGH0jXDP2pXsNj3w3d1mGNALbnsLBj_LkYKisPpEkEa1oXsAcI9KB-eStHsxZVkrp6qSz-ykeGK29OVbaWICXSFwOcV5Nroh5tkOQ3BD4WA1s5Xp5CfNKCwC9ikxeW68lO98vXJ0O4VHpiaj2ewAEIUH5EXSH_dwHiKKdYDpvb_Y",
-			err:   fmt.Errorf("an error occurred parsing the public key base64 for key ID '5'; Invalid Key: Key must be PEM encoded PKCS1 or PKCS8 private key"),
+			err:   fmt.Errorf("token is unverifiable: error while executing keyfunc: an error occurred parsing the public key base64 for key ID '5'; invalid key: Key must be a PEM encoded PKCS1 or PKCS8 key"),
 		},
 		"malformed certificate": {
 			token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEifQ.eyJleHAiOjE2ODA4ODg2NTZ9.teSTKOrGttiW3XkBAFEDxb1UhYG1H2ZtFTKd9FLrei2pqq7jjjSd9C0SXHmFIm6luIhdOkmk1lxCwcVqLM-gGOCNeVIepTbNaFyqcVuiDj44ekdQYTP82OnxXakrLQSwRWVI7jtHZGmDlV2STGPA18nXi1brj4I081_hNXUpP9WF1LpMoaVSLyUVgcmraTxuVIqZToSiy1KeG6wwTx--Sin2uSKnykaDnG2OutVi9ccoW0lt7a2ggnKQd_c2sgd7-4bRWRMdxCPPHkTSOegUe7Q5op71HzM_w17YnAF3YEf4RYV22XADUAGYsOH7Hx_HhtSkCI_D_tFxBaFVq4gU13cgsxruCLwF60xIA06AKD_SgJHbBIlVykCwT3ghCQh4Ph_e29BRcyOFOauZiPzbo4RrgFORx_rdzcwelVBOvFhQ2Xf1fPllhZy8B-Kmj4YBJyj-qT9s5sepF67lcBiKVPOegqz4TtPG84h6ELxkzcsiuW5Pc-itsZ62xoD5JbMtN83eqKMuvxn9dkOq5cGOp4qbi0nUCu3Sq5EMk4ju8hJGHI8QEEQp90peEO81rMIlcbVBDjoGHEn5lo08hQbpniZsDgbuhOfMeLQJsgRtyx3iW1CInlpeofXSjn9GtDChZVwM2FRp-mNTUIi08MPQUeNOiwynwRrgz6XUqN3TFVg",

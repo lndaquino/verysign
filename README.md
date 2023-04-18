@@ -12,7 +12,7 @@ List of supported vendors:
 
 * GCP
 
-Supported Go version: starting on 1.16
+Supported Go version: starting on 1.18
 
 ## Example using echo
 
